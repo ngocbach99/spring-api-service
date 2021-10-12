@@ -43,16 +43,15 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
         auth.userDetailsService(userService) // Cung cấp userservice cho spring security
-            .passwordEncoder(new BCryptPasswordEncoder()); // cung cấp password encoder
+            .passwordEncoder(passwordEncoder()); // cung cấp password encoder
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http    .csrf().disable()
                 .cors() // Ngăn chặn request từ một domain khác
                     .and()
                 .authorizeRequests()
-                	.antMatchers("/api/hello").permitAll()
                     .antMatchers("/api/login").permitAll() // Cho phép tất cả mọi người truy cập vào địa chỉ này
                     .anyRequest().authenticated();
                  // Tất cả các request khác đều cần phải xác thực mới được truy cập

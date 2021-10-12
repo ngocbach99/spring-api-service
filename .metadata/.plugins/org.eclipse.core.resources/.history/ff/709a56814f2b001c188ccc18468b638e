@@ -1,0 +1,5 @@
+package com.bach.springsecurityjwt.models;
+
+public class User {
+
+}

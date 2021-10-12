@@ -7,9 +7,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,21 +35,12 @@ class HelloWorldController {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
 
-	@GetMapping("/hello" )
-	public String firstPage(@RequestParam(name="username" , required = false) String username) {
-		
-		System.out.println(username);
-		
-		System.out.println(userRepository.findByUsername(username));
-		
-		return "Hello World";
-	}
-
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public LoginResponse createAuthenticationToken(@Valid @RequestBody LoginRequest user) throws Exception {
+	@PostMapping("/login")
+	public LoginResponse createAuthenticationToken(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
 
 			Authentication authentication = authenticationManager.authenticate(
-					new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
+					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+	                        loginRequest.getPassword())
 			);
 		
 		//Nếu không xảy ra exception tức là thông tin hợp lệ.
